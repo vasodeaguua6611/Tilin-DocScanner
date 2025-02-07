@@ -10,3 +10,4 @@ pdf2image>=1.16.0
 pytesseract>=0.3.8
 reportlab>=3.6.2
 tqdm>=4.65.0
+pyinstaller>=5.13.0
