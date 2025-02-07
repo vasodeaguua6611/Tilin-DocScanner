@@ -1,0 +1,46 @@
+app:
+  name: "Tilin Scanner Pro"
+  version: "2.0.0"
+  company: "Tilin Solutions"
+
+scanner:
+  output_dir: "scanned_docs"
+  supported_formats:
+    - ".jpg"
+    - ".jpeg"
+    - ".png"
+    - ".bmp"
+    - ".pdf"
+  processing:
+    max_dimension: 2400
+    quality: 95
+    dpi: 300
+    ocr_enabled: true
+    auto_contrast: true
+    denoise: true
+    auto_rotate: true
+
+gui:
+  window_width: 1400
+  window_height: 900
+  theme: "fusion"
+  colors:
+    primary: "#1a73e8"
+    secondary: "#34495E"
+    accent: "#7c4dff"
+    success: "#00c853"
+    warning: "#ffd600"
+    error: "#d50000"
+    background: "#ffffff"
+    text: "#202124"
+    surface: "#f8f9fa"
+  fonts:
+    main: "Segoe UI"
+    size: 10
+  features:
+    drag_drop: true
+    batch_processing: true
+    preview_zoom: true
+    auto_save: true
+    file_naming: "timestamp" # Options: timestamp, sequence, original
+    recent_files_count: 10
