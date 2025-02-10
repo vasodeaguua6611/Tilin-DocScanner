@@ -8,7 +8,7 @@ document scanner that just works™.
 
 ## Who are we?
 
-TilinSolutions is a group of weirdos that go around saying they're devs. Akoza, Peppy, Xuya and Jules
+TilinSolutions is a group of weirdos who go around claiming to be devs. Akoza, Peppy, Xuya, and Jules.
 
 # How
 
