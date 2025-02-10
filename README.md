@@ -6,6 +6,10 @@ This is awful :rage:
 
 document scanner that just works™.
 
+## Who are we?
+
+TilinSolutions is a group of weirdos that go around saying they're devs. Akoza, Peppy, Xuya and Jules
+
 # How
 
 ### For Normies (Using the Executable)
