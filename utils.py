@@ -1,3 +1,4 @@
+
 import yaml
 import os
 from PyQt5.QtGui import QImage, QPixmap
@@ -6,6 +7,16 @@ import numpy as np
 import imutils
 
 def load_config():
+    """
+    The above functions include loading a configuration file, converting OpenCV images to QPixmap,
+    resizing images while maintaining aspect ratio, creating a PDF from images, extracting text from an
+    image using Tesseract OCR, and automatically rotating an image based on its content.
+    :return: The code provided contains several functions for image processing and PDF generation using
+    OpenCV, ReportLab, and other libraries. The functions include loading a configuration file,
+    converting OpenCV images to QPixmap, resizing images while maintaining aspect ratio, creating a PDF
+    from a list of images, extracting text from an image using Tesseract OCR, and auto-rotating an image
+    based on its content.
+    """
     config_path = os.path.join(os.path.dirname(__file__), 'config.yaml')
     with open(config_path, 'r') as f:
         return yaml.safe_load(f)
