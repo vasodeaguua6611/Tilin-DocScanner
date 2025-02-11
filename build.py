@@ -1,9 +1,14 @@
+
 import os
 import shutil
 import subprocess
 import sys
 
 def clean_build():
+    """
+    The Python script defines functions to clean build directories and build an executable using
+    PyInstaller, handling errors and providing feedback.
+    """
     """Clean build directories"""
     dirs_to_clean = ['build', 'dist']
     for dir_name in dirs_to_clean:
