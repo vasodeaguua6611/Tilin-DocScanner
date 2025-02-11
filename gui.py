@@ -1,7 +1,3 @@
-# The above Python code is importing the `sys` module. This module provides access to some variables
-# used or maintained by the Python interpreter and to functions that interact with the interpreter.
-# However, the code snippet you provided is incomplete and does not contain any specific functionality
-# or operations.
 import sys
 import os
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, 
@@ -28,15 +24,12 @@ class ScannerThread(QThread):
     def run(self):
         try:
             self.progress.emit(10)
-            # Enhanced progress feedback
             self.progress.emit(25)
             scanned = process_document(self.image)
             self.progress.emit(60)
             
-            # Additional image cleanup if needed
             if scanned is not None and scanned.size > 0:
                 self.progress.emit(80)
-                # Ensure good contrast
                 scanned = cv2.normalize(scanned, None, 0, 255, cv2.NORM_MINMAX)
             else:
                 raise ValueError("Failed to process document")
@@ -90,25 +83,15 @@ class DocumentScannerGUI(QMainWindow):
         self.config = load_config()
         self.setup_styling()
         self.init_ui()
-
-        # Add toolbar
         self.create_toolbar()
-        
-        # Add menu bar
         self.create_menu()
-        
-        # Add recent files dock
         self.create_recent_files_dock()
-
         self.recent_files = []
         self.max_recent_files = self.config['gui']['features']['recent_files_count']
 
     def setup_styling(self):
-        # Set application style
         self.app_style = QStyleFactory.create(self.config['gui']['theme'])
         QApplication.setStyle(self.app_style)
-        
-        # Create and set palette
         palette = QPalette()
         colors = self.config['gui']['colors']
         palette.setColor(QPalette.Window, QColor(colors['background']))
@@ -117,8 +100,6 @@ class DocumentScannerGUI(QMainWindow):
         palette.setColor(QPalette.ButtonText, QColor(colors['background']))
         palette.setColor(QPalette.Highlight, QColor(colors['accent']))
         QApplication.setPalette(palette)
-
-        # Set default font
         font = QFont(self.config['gui']['fonts']['main'], 
                     self.config['gui']['fonts']['size'])
         QApplication.setFont(font)
@@ -127,21 +108,15 @@ class DocumentScannerGUI(QMainWindow):
         self.setWindowTitle(f"{self.config['app']['name']} v{self.config['app']['version']}")
         self.setGeometry(100, 100, self.config['gui']['window_width'], 
                         self.config['gui']['window_height'])
-
-        # Create main widget and layout
         main_widget = QWidget()
         self.setCentralWidget(main_widget)
         layout = QVBoxLayout(main_widget)
         layout.setSpacing(20)
         layout.setContentsMargins(20, 20, 20, 20)
-
-        # Add header
         header = QLabel(self.config['app']['name'])
         header.setFont(QFont(self.config['gui']['fonts']['main'], 24, QFont.Bold))
         header.setAlignment(Qt.AlignCenter)
         layout.addWidget(header)
-
-        # Create preview container
         preview_container = QFrame()
         preview_container.setFrameStyle(QFrame.StyledPanel | QFrame.Raised)
         preview_container.setStyleSheet(f"""
@@ -153,8 +128,6 @@ class DocumentScannerGUI(QMainWindow):
         """)
         preview_layout = QHBoxLayout(preview_container)
         preview_layout.setSpacing(15)
-
-        # Style preview labels
         preview_style = f"""
             QLabel {{
                 background-color: {self.config['gui']['colors']['background']};
@@ -163,24 +136,17 @@ class DocumentScannerGUI(QMainWindow):
                 color: {self.config['gui']['colors']['text']};
             }}
         """
-
-        # Original image preview
         self.original_preview = ZoomableImageView()
         self.original_preview.setStyleSheet(preview_style)
         self.original_preview.setAlignment(Qt.AlignCenter)
         self.original_preview.setMinimumSize(400, 400)
         preview_layout.addWidget(self.original_preview)
-
-        # Scanned image preview
         self.scanned_preview = ZoomableImageView()
         self.scanned_preview.setStyleSheet(preview_style)
         self.scanned_preview.setAlignment(Qt.AlignCenter)
         self.scanned_preview.setMinimumSize(400, 400)
         preview_layout.addWidget(self.scanned_preview)
-
         layout.addWidget(preview_container)
-
-        # Create controls
         controls = QFrame()
         controls.setStyleSheet(f"""
             QFrame {{
@@ -191,8 +157,6 @@ class DocumentScannerGUI(QMainWindow):
         """)
         controls_layout = QHBoxLayout(controls)
         controls_layout.setSpacing(10)
-
-        # Button style
         button_style = f"""
             QPushButton {{
                 background-color: {self.config['gui']['colors']['primary']};
@@ -210,27 +174,21 @@ class DocumentScannerGUI(QMainWindow):
                 color: #7f8c8d;
             }}
         """
-
         self.select_btn = QPushButton("Select Image")
         self.select_btn.setStyleSheet(button_style)
         self.select_btn.clicked.connect(self.select_image)
         controls_layout.addWidget(self.select_btn)
-
         self.scan_btn = QPushButton("Scan Document")
         self.scan_btn.setStyleSheet(button_style)
         self.scan_btn.clicked.connect(self.scan_document)
         self.scan_btn.setEnabled(False)
         controls_layout.addWidget(self.scan_btn)
-
         self.save_btn = QPushButton("Save Result")
         self.save_btn.setStyleSheet(button_style)
         self.save_btn.clicked.connect(self.save_result)
         self.save_btn.setEnabled(False)
         controls_layout.addWidget(self.save_btn)
-
         layout.addWidget(controls)
-
-        # Progress bar
         self.progress_bar = QProgressBar()
         self.progress_bar.setStyleSheet(f"""
             QProgressBar {{
@@ -246,10 +204,7 @@ class DocumentScannerGUI(QMainWindow):
         """)
         self.progress_bar.setVisible(False)
         layout.addWidget(self.progress_bar)
-
-        # Add status bar
         self.statusBar().showMessage(f"{self.config['app']['company']} | Ready")
-
         self.current_image = None
         self.scanned_image = None
         self.show()
@@ -258,56 +213,42 @@ class DocumentScannerGUI(QMainWindow):
         toolbar = QToolBar()
         toolbar.setMovable(False)
         toolbar.setIconSize(QSize(32, 32))
-        
-        # Add toolbar actions
         scan_action = QAction(QIcon("icons/scan.png"), "Scan", self)
         scan_action.triggered.connect(self.scan_document)
         toolbar.addAction(scan_action)
-        
-        # Add more toolbar actions...
-        
         self.addToolBar(toolbar)
 
     def create_menu(self):
         menubar = self.menuBar()
-        
-        # File menu
         file_menu = menubar.addMenu("File")
         open_action = QAction("Open", self)
         open_action.triggered.connect(self.select_image)
         file_menu.addAction(open_action)
-        
-        # Add more menus and actions...
 
     def create_recent_files_dock(self):
         dock = QDockWidget("Recent Files", self)
         dock.setAllowedAreas(Qt.LeftDockWidgetArea | Qt.RightDockWidgetArea)
-        
         self.recent_files_list = QListWidget()
         self.recent_files_list.itemClicked.connect(self.load_recent_file)
-        
         dock.setWidget(self.recent_files_list)
         self.addDockWidget(Qt.LeftDockWidgetArea, dock)
 
     def load_recent_file(self, item):
-        """Load a file from the recent files list"""
         file_path = item.text()
         if os.path.exists(file_path):
             try:
                 self.current_image = cv2.imread(file_path)
                 if self.current_image is None:
                     raise ValueError("Could not load image")
-                
                 preview = resize_image_aspect(
                     self.current_image,
                     self.width() // 2 - 30,
                     self.height() - 100
                 )
-                self.original_preview.set_image(cv2_to_qpixmap(preview))  # Changed from setPixmap
+                self.original_preview.set_image(cv2_to_qpixmap(preview))
                 self.scan_btn.setEnabled(True)
                 self.save_btn.setEnabled(False)
                 self.add_to_recent_files(file_path)
-                
             except Exception as e:
                 QMessageBox.critical(self, "Error", f"Could not load image: {str(e)}")
                 self.remove_from_recent_files(file_path)
@@ -316,25 +257,19 @@ class DocumentScannerGUI(QMainWindow):
             self.remove_from_recent_files(file_path)
 
     def add_to_recent_files(self, file_path):
-        """Add a file to the recent files list"""
         if file_path in self.recent_files:
             self.recent_files.remove(file_path)
         self.recent_files.insert(0, file_path)
-        
-        # Limit the number of recent files
         if len(self.recent_files) > self.max_recent_files:
             self.recent_files = self.recent_files[:self.max_recent_files]
-            
         self.update_recent_files_list()
 
     def remove_from_recent_files(self, file_path):
-        """Remove a file from the recent files list"""
         if file_path in self.recent_files:
             self.recent_files.remove(file_path)
         self.update_recent_files_list()
 
     def update_recent_files_list(self):
-        """Update the recent files list widget"""
         self.recent_files_list.clear()
         for file_path in self.recent_files:
             self.recent_files_list.addItem(file_path)
@@ -346,23 +281,20 @@ class DocumentScannerGUI(QMainWindow):
             "",
             "Images (*.png *.jpg *.jpeg *.bmp)"
         )
-        
         if file_name:
             try:
                 self.current_image = cv2.imread(file_name)
                 if self.current_image is None:
                     raise ValueError("Could not load image")
-                
                 preview = resize_image_aspect(
                     self.current_image,
                     self.width() // 2 - 30,
                     self.height() - 100
                 )
-                self.original_preview.set_image(cv2_to_qpixmap(preview))  # Changed from setPixmap
+                self.original_preview.set_image(cv2_to_qpixmap(preview))
                 self.scan_btn.setEnabled(True)
                 self.save_btn.setEnabled(False)
                 self.add_to_recent_files(file_name)
-                
             except Exception as e:
                 QMessageBox.critical(self, "Error", f"Could not load image: {str(e)}")
 
@@ -370,22 +302,17 @@ class DocumentScannerGUI(QMainWindow):
         if self.current_image is None:
             QMessageBox.warning(self, "Warning", "Please select an image first")
             return
-
-        # Check image size and quality
         if self.current_image.size == 0:
             QMessageBox.warning(self, "Warning", "Invalid image")
             return
-
         height, width = self.current_image.shape[:2]
         if height < 100 or width < 100:
             QMessageBox.warning(self, "Warning", "Image too small")
             return
-
         self.progress_bar.setVisible(True)
         self.progress_bar.setValue(0)
         self.scan_btn.setEnabled(False)
         self.select_btn.setEnabled(False)
-
         self.scanner_thread = ScannerThread(self.current_image)
         self.scanner_thread.finished.connect(self.on_scan_complete)
         self.scanner_thread.error.connect(self.on_scan_error)
@@ -399,7 +326,7 @@ class DocumentScannerGUI(QMainWindow):
             self.width() // 2 - 30,
             self.height() - 100
         )
-        self.scanned_preview.set_image(cv2_to_qpixmap(preview))  # Changed from setPixmap
+        self.scanned_preview.set_image(cv2_to_qpixmap(preview))
         self.save_btn.setEnabled(True)
         self.scan_btn.setEnabled(True)
         self.select_btn.setEnabled(True)
@@ -414,14 +341,12 @@ class DocumentScannerGUI(QMainWindow):
     def save_result(self):
         if self.scanned_image is None:
             return
-
         file_name, _ = QFileDialog.getSaveFileName(
             self,
             "Save Scanned Document",
             "",
             "PNG (*.png);;JPEG (*.jpg *.jpeg);;All Files (*.*)"
         )
-
         if file_name:
             try:
                 cv2.imwrite(file_name, self.scanned_image)
